@@ -1,28 +1,25 @@
 const express = require("express");
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const Product = require("../models/Product");
 const bcrypt = require('bcrypt');
 
 
-router.post("/register", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+    const isUser = await User.findOne({ email });
+    if (isUser) {
+        return res.status(400).json({ message: 'USER EXISTS' })
+    }
+     const user = await User.create({ username, email, password });
+     res.status(201).json({ message: 'USER EGISTERED', userId: user._id});
+    } catch (err) {
+        res.status(500).json({ message: 'SERVER ERROR', error: err.message});
+    }
 });
 
-router.post("/login", async (req, res) => {
-  try {
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+router.post("/", async (req, res) => {
 });
 
 module.exports = router;
