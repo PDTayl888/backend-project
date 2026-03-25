@@ -28,7 +28,7 @@ router.post("/projects/:projectId/tasks", async (req, res) => {
 router.get("/projects/:projectId/tasks", async (req, res) => {
   try {
     const project = await Project.findById(req.params.projectId);
-    
+
     if (!project) {
       return res.status(404).json({ message: "PROJECT NOT FOUND" });
     }
@@ -45,7 +45,7 @@ router.get("/projects/:projectId/tasks", async (req, res) => {
 
 router.put("/tasks/:taskId", async (req, res) => {
   try {
-    const task = await Task.findById(req.params.taskId).populate('project');
+    const task = await Task.findById(req.params.taskId).populate("project");
 
     if (!task) {
       return res.status(404).json({ message: "TASK NOT FOUND" });
@@ -54,7 +54,11 @@ router.put("/tasks/:taskId", async (req, res) => {
       return res.status(403).json({ message: "NOT YOURS BUDDY" });
     }
 
-    const updatedTask = await Task.findByIdAndUpdate(req.params.taskId, req.body, { new: true });
+    const updatedTask = await Task.findByIdAndUpdate(
+      req.params.taskId,
+      req.body,
+      { new: true },
+    );
     res.status(200).json(updatedTask);
   } catch (error) {
     res.status(500).json({ message: "SERVER ERROR", error: error.message });
@@ -63,7 +67,7 @@ router.put("/tasks/:taskId", async (req, res) => {
 
 router.delete("/tasks/:taskId", async (req, res) => {
   try {
-    const task = await Task.findById(req.params.taskId).populate('project');
+    const task = await Task.findById(req.params.taskId).populate("project");
     if (!task) {
       return res.status(404).json({ message: "TASK NOT FOUND" });
     }
