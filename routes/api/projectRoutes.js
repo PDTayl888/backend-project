@@ -3,7 +3,9 @@ const router = express.Router();
 const Project = require("../models/Project");
 const authMiddleWare = require("../../utils/authMiddleware");
 
-router.post("/", authMiddleWare, async (req, res) => {
+router.use(authMiddleWare);
+
+router.post("/", async (req, res) => {
   try {
     const project = await Project.create({
       ...req.body,
@@ -11,11 +13,11 @@ router.post("/", authMiddleWare, async (req, res) => {
     });
     res.status(201).json(project);
   } catch (error) {
-    res.status(500).json({ message: 'SERVER ERRRO', error.message });
+    res.status(500).json({ message: 'SERVER ERROR', error: error.message });
   }
 });
 
-router.get("/", authMiddleWare,async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const projects = await Project.find({ user: req.user.id });
     res.status(200).json(projects);
@@ -24,7 +26,7 @@ router.get("/", authMiddleWare,async (req, res) => {
   }
 });
 
-router.get("/:id", authMiddleWare, async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const project = await Project.findOne({ _id: req.params.id, user: req.user.id });
     if (!project) {
@@ -36,7 +38,7 @@ router.get("/:id", authMiddleWare, async (req, res) => {
   }
 });
 
-router.put("/:id", authMiddleWare, async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const project = await Project.findOneAndUpdate(
       {_id: req.params.id, user: req.user.id },
@@ -53,7 +55,7 @@ router.put("/:id", authMiddleWare, async (req, res) => {
 });
 
 
-router.delete("/:id", authMiddleWare, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
    const project = await Project.findOneAndDelete(
     { _id: req.params.id, user: req.user.id }
