@@ -38,24 +38,32 @@ router.get("/:id", authMiddleWare, async (req, res) => {
 
 router.put("/:id", authMiddleWare, async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
+    const project = await Project.findOneAndUpdate(
+      {_id: req.params.id, user: req.user.id },
+    req.body,
+  { new: true }
+  );
+  if (!project) {
+    return res.status(403)
+  }
+    res.status(201).json(project);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: 'SERVER ERROR', error: error.message });
   }
 });
 
 
 router.delete("/:id", authMiddleWare, async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
+   const project = await Project.findOneAndDelete(
+    { _id: req.params.id, user: req.user.id }
+    )
+    if (!project) {
+      return res.status(403).json({ message: "PROJECT NOT FOUND" });
+    }
+    res.status(200).json({ message: 'DELETED'});
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: 'SERVER ERROR', error: error.message });
   }
 });
 
