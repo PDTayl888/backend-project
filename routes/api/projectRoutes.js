@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const Project = require("../models/Project");
-const authMiddleWare = require("../../utils/authMiddleware");
+const Project = require('../../models/Project');
+const { authMiddleware } = require("../../utils/authMiddleware");
 
-router.use(authMiddleWare);
+router.use(authMiddleware);
 
 router.post("/", async (req, res) => {
   try {
@@ -46,7 +46,7 @@ router.put("/:id", async (req, res) => {
   { new: true }
   );
   if (!project) {
-    return res.status(403)
+    return res.status(403).json({ message: "NOT YOURS BUDDY"});
   }
     res.status(201).json(project);
   } catch (error) {

@@ -8,9 +8,14 @@ const PORT = process.env.PORT || 3000;
 connectDB();
 
 app.use(express.json());
-const bookRoutes = require('./routes/productRoutes');
 
-app.use('/api/products', bookRoutes);
+const userRoutes = require('./routes/api/userRoutes');
+const projectRoutes = require('./routes/api/projectRoutes');
+const taskRoutes = require('./routes/api/taskRoutes');
+
+app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api', taskRoutes);
 
 app.listen(PORT, () => {
     console.log(`SERVER RUNNING AT PORT ${PORT}`);
